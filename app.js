@@ -1,4 +1,5 @@
 import express from 'express';
+import 'dotenv/config'
 import userRoutes from './routes/users.routes.js';
 import taskRoutes from './routes/tasks.routes.js';
 import './config/db.js'

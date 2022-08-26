@@ -1,2 +1,2 @@
-const secretKey = "ñandu123456ñandu";
+const secretKey = process.env.SECRET_KEY;
 export default secretKey;

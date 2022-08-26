@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 try {
-    mongoose.connect("mongodb+srv://sebsolezzi:789456123@cluster0.tuyi8.mongodb.net/?retryWrites=true&w=majority")
+    mongoose.connect(process.env.MONGO_URL)
     console.log('conectado')
 } catch (error) {
     console.log(error)
