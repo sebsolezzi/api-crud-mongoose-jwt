@@ -14,7 +14,7 @@ export const getTasks = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return res.status(403).json({ 'msg': 'unauthorized user' })
+        return res.status(404).json({ 'msg': 'get error', 'error': error })
     }
 
 }
@@ -34,7 +34,7 @@ export const createTask = async (req, res) => {
 
         } catch (error) {
             console.log(error)
-            return res.status(403).json({ 'msg': 'unauthorized user' })
+            return res.status(404).json({ 'msg': 'create error', 'error': error })
         }
     } else {
         return res.status(403).json({ 'msg': 'unauthorized user' })
@@ -53,12 +53,12 @@ export const deleteTask = async (req, res) => {
             const a =  await Task.deleteOne({_id:id, author: userId})
 
             
-            return res.status(200).json({ 'msg': 'Task deleted', 'a':a })
+            return res.status(200).json({ 'msg': 'Task deleted'})
             
 
         } catch (error) {
             console.log(error)
-            return res.status(403).json({ 'msg': 'unauthorized user' })
+            return res.status(404).json({ 'msg': 'delete error', 'error': error })
         }
     } else {
         return res.status(403).json({ 'msg': 'unauthorized user' })
@@ -70,35 +70,44 @@ export const updateTask = async (req, res) => {
         try {
             const user = jwt.decode(req.token);
             const id = req.params.id;
-            const taskName = req.body.taskname;
+            const taskname = req.body.taskname;
             const userId = user.id;
-            console.log(id)
-            console.log(userId)
+            
+            const task =  await Task.findOne({_id:id, author: userId})
+           
+            task.task = taskname
+            await task.save()
 
-
-            await Task.update({
-                taskName
-            }, {
-                where: {
-                    id,
-                    userId
-                }
-            })
-
-            const updateTask = await Task.findOne({
-                where: {
-                    id,
-                    userId
-                }
-            })
-
-            return res.status(200).json({ 'msg': 'Ok', 'task': updateTask })
+            return res.status(200).json({ 'msg': 'Ok', 'task': task })
 
         } catch (error) {
             console.log(error)
-            return res.status(403).json({ 'msg': 'usuario no autorizado' })
+            return res.status(404).json({ 'msg': 'update error', 'error': error })
         }
     } else {
-        return res.status(403).json({ 'msg': 'usuario no autorizado' })
+        return res.status(403).json({ 'msg': 'unauthorized user' })
     }
-}   
+}
+export const changeStateTask = async (req, res) => {
+    if (jwt.verify(req.token, secretKey)) {
+
+        try {
+            const user = jwt.decode(req.token);
+            const id = req.params.id;
+            const userId = user.id;
+            
+            const task =  await Task.findOne({_id:id, author: userId})
+           
+            task.completed = !task.completed
+            await task.save()
+
+            return res.status(200).json({ 'msg': 'Ok', 'task': task })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(404).json({ 'msg': 'update error', 'error': error })
+        }
+    } else {
+        return res.status(403).json({ 'msg': 'unauthorized user' })
+    }
+}      
