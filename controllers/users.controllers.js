@@ -26,8 +26,6 @@ export const createUser = async (req, res) => {
         const newuser = new User({ username, email, password: hashedPassword });
         await newuser.save();
 
-        //const respuesta = await user.save()
-        //return res.status(200).json({ 'msg': 'user created', 'user': respuesta });
         return res.status(200).json({ 'msg': 'user created' });
     } catch (error) {
         console.log(error);
@@ -44,6 +42,7 @@ export const loginUser = async (req, res) => {
         const password = req.body.password;
 
         const user = await User.findOne({ username })
+        console.log(user)
 
         if (!user) {
             return res.status(404).json({ 'msg': 'Usuario no registrado' });
@@ -51,7 +50,7 @@ export const loginUser = async (req, res) => {
 
         if (await bcrypt.compare(password, user.password)) {
             const token = jtw.sign({ id: user._id }, secretKey, { expiresIn: "30d" })
-            return res.status(200).json({ 'token': token });
+            return res.status(200).json({ 'user': user.username, 'token': token });
         } else {
             return res.status(404).json({ 'msg': 'User or password bad' });
         }
