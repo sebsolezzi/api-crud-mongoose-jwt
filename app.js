@@ -3,8 +3,10 @@ import 'dotenv/config'
 import userRoutes from './routes/users.routes.js';
 import taskRoutes from './routes/tasks.routes.js';
 import './config/db.js'
+import cors from 'cors'
 
 const app = express();
+app.use(cors())
 app.use(express.json())
 
 app.use('/users',userRoutes)

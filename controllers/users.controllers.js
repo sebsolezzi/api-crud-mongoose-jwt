@@ -57,7 +57,7 @@ export const loginUser = async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data);
         return res.status(404).json({ 'msg': 'Error al generar token' });
     }
 }
