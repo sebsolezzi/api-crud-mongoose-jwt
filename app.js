@@ -12,6 +12,10 @@ app.use(express.json())
 app.use('/users',userRoutes)
 app.use('/tasks',taskRoutes)
 
+app.get('/hola',(req,res)=>{
+    return res.json({'hola':'gracias por pasar'})
+})
+
 app.get('*',(req,res)=>{
     return res.status(404).json({'msg':'path not found'})
 })
