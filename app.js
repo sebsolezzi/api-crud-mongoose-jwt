@@ -6,6 +6,8 @@ import './config/db.js'
 import cors from 'cors'
 
 const app = express();
+const port = process.env.PORT || 3333;
+
 app.use(cors())
 app.use(express.json())
 
@@ -20,6 +22,6 @@ app.get('*',(req,res)=>{
     return res.status(404).json({'msg':'path not found'})
 })
 
-app.listen(3333,()=>{
+app.listen(port,()=>{
     console.log('Server corriendo en el puerto 3333');
 })
